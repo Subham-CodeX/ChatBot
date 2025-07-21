@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subham's Neon ChatBot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chatbox"></div>
+        <div id="input-area">
+            <input type="text" id="user_input" placeholder="Type message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            let userText = document.getElementById("user_input").value;
+            if (userText === "") return;
+            let chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += "<p class='user'><b>You:</b> " + userText + "</p>";
+
+            fetch("/get?msg=" + userText)
+                .then(response => response.text())
+                .then(botReply => {
+                    chatbox.innerHTML += "<p class='bot'><b>Bot:</b> " + botReply + "</p>";
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                });
+
+            document.getElementById("user_input").value = "";
+        }
+    </script>
+</body>
+</html>
